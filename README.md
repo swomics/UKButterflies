@@ -42,7 +42,7 @@ Inputs for each step should be submitted via the command line.
 
    #### *wrapper*
 
-parallel_fastqc_bcp3.sh
+parallel_fastqc_barkla.sh
 
 
 
@@ -87,7 +87,7 @@ cutadapt --help
 #### *wrapper*
 
 
-01a_parallel_cutadapt_bluecp3.sh
+01a_parallel_cutadapt_barkla.sh
 
 
 Edit the generated script above to submit from your home directory: 
