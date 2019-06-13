@@ -1,4 +1,4 @@
-## Forked for running on UoL Barkla with SLURM
+## Forked for UoL Barkla with SLURM
 
 # UKButterflies
 NERC UK Butterfly project
