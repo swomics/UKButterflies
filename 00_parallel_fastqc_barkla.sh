@@ -11,7 +11,6 @@
 # Changelog
 #
 #QUEUE depreciated
-#Email forwarding not active on bluecrystalp3
 #Look into core options
 
 VERSION='1.1-2018.10.06'
@@ -41,9 +40,9 @@ function usage {
 	echo "  $(basename $0)"
 	echo "      -i <input directory> => Folder with fastq files (.gz accepted)"
 	echo "      -o <output directory> => Output folder to save fastQC reports"
-	echo "      -n <number of processors> => processors per library (optional, default=$NCORES)"
-	echo "      -t <allocated time> => Allocated time (in hours) for each analysis (optional: default=$HRS)"
-	echo "      -m <allocated memory> => Allocated memory (in gigabytes) for each analysis (optional: default=$MEM)"
+	echo "      -n <number of processors> => processors per library, (max 40)"
+	echo "      -t <allocated time> => Allocated time (in hours) for each analysis, (max 72)"
+	echo "      -m <allocated memory> => Allocated memory (in gigabytes) for each analysis (max 384)"
 	echo "      -h => show this help"
 	echo ""
 	echo "  Example:"
@@ -88,48 +87,60 @@ else
 	usage
 fi
 
+if [[ $HRS >72];
+then
+	echo "ERROR - Exceeded Barkla time limit"
+	exit
+fi
+
+if [[ $MEM >384];
+then
+	echo "ERROR - Exceeded Barkla single node memory limit"
+	exit
+fi
+
+if [[ $NCORES >40];
+then
+	echo "ERROR - Exceeded Barkla single node core limit"
+	exit
+fi
+
 N=$(find $INDIR -maxdepth 1 -name "*.fastq*" | wc -l | cut -f1 -d" ")
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 TMPDIR="parallel_fastqc_"$TIMESTAMP"_"$RANDOM
 
-INPUT_LOCALDIR="/local/$TMPDIR""_in"
+INPUT_LOCALDIR="~/sharedscratch/$TMPDIR""_in"
 
-if [[ $QUEUE == "popgenom" || $QUEUE == "molecol" ]];
-then
-	INPUT_LOCALDIR="/local/tmp/$TMPDIR""_in"
-fi
 
 SMSJOB="$OUTDIR/parallel_fastqc.$TIMESTAMP.smsjob.sh"
 LOG="$OUTDIR/parallel_fastqc.$TIMESTAMP.smsjob.log"
 
 # Initialize submission script
 mkdir -p $OUTDIR
-echo '#!/bin/bash' > $SMSJOB
+echo '#!/bin/bash -l' > $SMSJOB
 
-# SGE OPTIONS
+# SLURM OPTIONS
 # -----------------------------------------
-echo '#PBS -l walltime='$HRS':00:00' >> $SMSJOB
-echo '#PBS -l mem='$MEM'gb' >> $SMSJOB
-####TOFIX this: number of core asked per job
-#if (($NCORES > 1 ));
-#then
-#	echo '#$ -pe openmp '$NCORES >> $SMSJOB
-#fi
-echo '#PBS -t 1-'$N >> $SMSJOB
-echo '#PBS -j oe' >> $SMSJOB
-echo '#PBS -o '$LOG >> $SMSJOB
+echo '#SBATCH -D '$TMPDIR >> $SMSJOB
+echo '#SBATCH --export=ALL' >> $SMSJOB
+echo '#SBATCH -t '$HRS':00:00' >> $SMSJOB
+echo '#SBATCH --mem="$MEM"G' >> $SMSJOB
+echo '#SBATCH -N 1 -n "$NCORES"' >> $SMSJOB
+echo '#SBATCH -a 1-'$N >> $SMSJOB
+echo '#SBATCH -o '$LOG >> $SMSJOB
 # -----------------------------------------
 
 cat >> $SMSJOB <<EOF
 
-module load apps/fastqc-0.11.5 
+#module load apps/fastqc-0.11.5 
 
 INDIR=$INDIR
 OUTDIR=$OUTDIR
 FQFILES=(\$INDIR/*.fastq*)
 #INDEX=\$((SGE_TASK_ID-1))
-INDEX=\$((PBS_ARRAYID-1))
+#INDEX=\$((PBS_ARRAYID-1))
+INDEX=\$(($SLURM_ARRAY_TASK_ID-1))
 FQ=\${FQFILES[\$INDEX]}
 EOF
 
@@ -161,7 +172,7 @@ EOF
 
 cat >> $SMSJOB <<EOF
 echo "-o \$OUTDIR \\\" >> \$LOG
-echo "-t $NCORES \\\" >> \$LOG
+echo "-N $NCORES \\\" >> \$LOG
 echo "--no-extract \\\" >> \$LOG
 echo >> \$LOG
 echo "---------------------------------------------------" >> \$LOG
@@ -188,7 +199,7 @@ EOF
 chmod +x $SMSJOB
 
 
-echo "Command to submit the job to bluecrystal ($QUEUE queue):"
+echo "Command to submit the job to Barkla ($QUEUE queue):"
 echo
-echo "qsub $SMSJOB"
+echo "sbatch $SMSJOB"
 echo
