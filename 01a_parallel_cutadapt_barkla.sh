@@ -155,6 +155,26 @@ else
 	usage
 fi
 
+if [[ $HRS >72];
+then
+	echo "ERROR - Exceeded Barkla time limit"
+	exit
+fi
+
+if [[ $MEM >384];
+then
+	echo "ERROR - Exceeded Barkla single node memory limit"
+	exit
+fi
+
+if [[ $NCORES >40];
+then
+	echo "ERROR - Exceeded Barkla single node core limit"
+	exit
+fi
+
+
+
 N=$(find $INDIR -maxdepth 1 -name "*R1*.fastq*" | wc -l | cut -f1 -d" ")
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
@@ -174,21 +194,23 @@ LOG="$OUTDIR/parallel_cutadapt.$TIMESTAMP.smsjob.log"
 mkdir -p $OUTDIR
 echo '#!/bin/bash' > $SMSJOB
 
-echo ""
-echo "Load necessary modules"
-echo "module load languages/python-2.7.10"
-echo "cutadapt installed locally"
-echo ""
+#echo ""
+#echo "Load necessary s"
+#echo "module load languages/python-2.7.10"
+#echo "cutadapt installed locally"
+#echo ""
 
-# PBS OPTIONS
+# SLURM OPTIONS
 # -----------------------------------------
-echo '#PBS -N '$JOBNAME'' >> $SMSJOB  
-echo '#PBS -l nodes=1:ppn=1' >> $SMSJOB 
-echo '#PBS -l mem='$MEM'gb' >> $SMSJOB 
-echo '#PBS -l walltime='$HRS':00:00' >> $SMSJOB
-echo '#PBS -j oe' >> $SMSJOB #concatenates error and output files (with prefix job1)
-echo '#PBS -t 1-'$N >> $SMSJOB
-echo '#PBS -o '$LOG >> $SMSJOB
+
+echo '#SBATCH -D '$TMPDIR >> $SMSJOB
+echo '#SBATCH --export=ALL' >> $SMSJOB
+echo '#SBATCH -t '$HRS':00:00' >> $SMSJOB
+echo '#SBATCH --mem="$MEM"G' >> $SMSJOB
+echo '#SBATCH -N 1 -n "$NCORES"' >> $SMSJOB
+echo '#SBATCH -a 1-'$N >> $SMSJOB
+echo '#SBATCH -o '$LOG >> $SMSJOB
+
 # -----------------------------------------
 
 echo ""
@@ -205,7 +227,7 @@ INDIR=$INDIR
 OUTDIR=$OUTDIR
 FQFILES1=(\$INDIR/*R1*.fastq*)
 FQFILES2=(\$INDIR/*R2*.fastq*)
-INDEX=\$((PBS_ARRAYID-1))
+INDEX=\$(($SLURM_ARRAY_TASK_ID-1))
 FQ1=\${FQFILES1[\$INDEX]}
 FQ2=\${FQFILES2[\$INDEX]}
 
@@ -292,7 +314,7 @@ EOF
 chmod u+x $SMSJOB
 
 
-echo "Command to submit the job to BlueCrystal p3:"
+echo "Command to submit the job to barkla:"
 echo
-echo "qsub $SMSJOB"
+echo "sbatch $SMSJOB"
 echo
