@@ -12,8 +12,8 @@
 # -rvad2 CTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -rvad3 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 
-01a_parallel_cutadapt_barkla.sh \
--i 00_raw_reads_museum1 \
--o 01a_museum_cutadapt_reads -n 1 -t 8 -m 8 -ph 33 \
+~/volatile/UKButterflies/01a_parallel_cutadapt_barkla.sh \
+-i ~/sharedscratch/Velocity/Cmin/00_raw_reads_museum1 \
+-o ~/sharedscratch/Velocity/Cmin/01a_museum_cutadapt_reads -n 1 -t 8 -m 8 -ph 33 \
 -fwad1 AGATCGGAAGAGCACACGTCTGAACTCCAGTC -rvad1 AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
 -minl 20 -phredq 20;
