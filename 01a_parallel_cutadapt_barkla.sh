@@ -196,7 +196,8 @@ echo '#!/bin/bash' > $SMSJOB
 
 #echo ""
 #echo "Load necessary s"
-#echo "module load languages/python-2.7.10"
+echo "module load apps/anaconda3/5.2.0"
+echo "source activate ~/volatile/Velocity/"
 #echo "cutadapt installed locally"
 #echo ""
 
