@@ -155,19 +155,19 @@ else
 	usage
 fi
 
-if [ $HRS >72 ];
+if [ $HRS -gt 72 ];
 then
 	echo "ERROR - Exceeded Barkla time limit"
 	exit
 fi
 
-if [ $MEM >384 ];
+if [ $MEM -gt 384 ];
 then
 	echo "ERROR - Exceeded Barkla single node memory limit"
 	exit
 fi
 
-if [ $NCORES >40 ];
+if [ $NCORES -gt 40 ];
 then
 	echo "ERROR - Exceeded Barkla single node core limit"
 	exit
