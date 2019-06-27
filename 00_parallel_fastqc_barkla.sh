@@ -133,7 +133,8 @@ echo '#SBATCH -o '$LOG >> $SMSJOB
 
 cat >> $SMSJOB <<EOF
 
-#module load apps/fastqc-0.11.5 
+module load apps/anaconda3/5.2.0
+source activate ~/volatile/Velocity/
 
 INDIR=$INDIR
 OUTDIR=$OUTDIR
