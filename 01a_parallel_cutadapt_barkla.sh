@@ -207,8 +207,8 @@ echo "source activate ~/volatile/Velocity/"
 echo '#SBATCH -D '$TMPDIR >> $SMSJOB
 echo '#SBATCH --export=ALL' >> $SMSJOB
 echo '#SBATCH -t '$HRS':00:00' >> $SMSJOB
-echo '#SBATCH --mem="$MEM"G' >> $SMSJOB
-echo '#SBATCH -N 1 -n "$NCORES"' >> $SMSJOB
+echo '#SBATCH --mem='$MEM'G' >> $SMSJOB
+echo '#SBATCH -N 1 -n '$NCORES'' >> $SMSJOB
 echo '#SBATCH -a 1-'$N >> $SMSJOB
 echo '#SBATCH -o '$LOG >> $SMSJOB
 
