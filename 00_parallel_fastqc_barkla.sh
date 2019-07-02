@@ -122,7 +122,7 @@ echo '#!/bin/bash -l' > $SMSJOB
 
 # SLURM OPTIONS
 # -----------------------------------------
-echo '#SBATCH -D '$TMPDIR >> $SMSJOB
+echo '#SBATCH -D ./' >> $SMSJOB
 echo '#SBATCH --export=ALL' >> $SMSJOB
 echo '#SBATCH -t '$HRS':00:00' >> $SMSJOB
 echo '#SBATCH --mem="$MEM"G' >> $SMSJOB
