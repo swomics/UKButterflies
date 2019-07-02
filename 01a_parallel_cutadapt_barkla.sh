@@ -180,7 +180,7 @@ N=$(find $INDIR -maxdepth 1 -name "*R1*.fastq*" | wc -l | cut -f1 -d" ")
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 TMPDIR="parallel_cutadapt_"$TIMESTAMP"_"$RANDOM
 
-INPUT_LOCALDIR=$INDIR/"$TMPDIR""_in"
+INPUT_LOCALDIR=$INDIR
 
 #if [[ $QUEUE == "popgenom" || $QUEUE == "molecol" ]];
 #then
