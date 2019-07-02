@@ -300,27 +300,27 @@ cat >> $SMSJOB <<EOF
 
 # Copy results back to output directory
 # and check all files are good
-PAIRED1=\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz;
-PAIRED2=\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz;
+#PAIRED1=\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz;
+#PAIRED2=\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz;
 
-#paired 1 
-while [[ ! -e \$INPUT_TMPDIR/\$PAIRED1 || ! -e \$OUTDIR/\$PAIRED1 || \
-     "\$(md5sum \$INPUT_TMPDIR/\$PAIRED1 | awk '{print \$1}')" != "\$(md5sum \$OUTDIR/\$PAIRED1 | awk '{print \$1}')" ]];
-do
-     sleep \$((30+\$RANDOM%90)) # wait 30-120 secs to try again
-     cp \$INPUT_TMPDIR/\$PAIRED1 \$OUTDIR/ >& /dev/null
-done
+##paired 1 
+#while [[ ! -e \$INPUT_TMPDIR/\$PAIRED1 || ! -e \$OUTDIR/\$PAIRED1 || \
+#     "\$(md5sum \$INPUT_TMPDIR/\$PAIRED1 | awk '{print \$1}')" != "\$(md5sum \$OUTDIR/\$PAIRED1 | awk '{print \$1}')" ]];
+#do
+#     sleep \$((30+\$RANDOM%90)) # wait 30-120 secs to try again
+#     cp \$INPUT_TMPDIR/\$PAIRED1 \$OUTDIR/ >& /dev/null
+#done
 
-#paired 2 
- while [[ ! -e \$INPUT_TMPDIR/\$PAIRED2 || ! -e \$OUTDIR/\$PAIRED2 || \
-      "\$(md5sum \$INPUT_TMPDIR/\$PAIRED2 | awk '{print \$1}')" != "\$(md5sum \$OUTDIR/\$PAIRED2 | awk '{print \$1}')" ]];
-do
-     sleep \$((30+\$RANDOM%90)) # wait 30-120 secs to try again
-     cp \$INPUT_TMPDIR/\$PAIRED2 \$OUTDIR/ >& /dev/null
-done
+##paired 2 
+# while [[ ! -e \$INPUT_TMPDIR/\$PAIRED2 || ! -e \$OUTDIR/\$PAIRED2 || \
+#      "\$(md5sum \$INPUT_TMPDIR/\$PAIRED2 | awk '{print \$1}')" != "\$(md5sum \$OUTDIR/\$PAIRED2 | awk '{print \$1}')" ]];
+#do
+#     sleep \$((30+\$RANDOM%90)) # wait 30-120 secs to try again
+#     cp \$INPUT_TMPDIR/\$PAIRED2 \$OUTDIR/ >& /dev/null
+#done
 
 #remove temporary files
-rm -f \$INPUT_TMPDIR/\$PAIRED1 \$INPUT_TMPDIR/\$PAIRED2
+#rm -f \$INPUT_TMPDIR/\$PAIRED1 \$INPUT_TMPDIR/\$PAIRED2
 
 EOF
 
@@ -331,4 +331,3 @@ echo "Command to submit the job to barkla:"
 echo
 echo "sbatch $SMSJOB"
 echo
-
