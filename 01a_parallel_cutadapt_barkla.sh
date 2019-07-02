@@ -231,13 +231,13 @@ INDEX=\$(($SLURM_ARRAY_TASK_ID-1))
 FQ1=\${FQFILES1[\$INDEX]}
 FQ2=\${FQFILES2[\$INDEX]}
 
-INPUT_LOCALDIR=$INDIR/"$TMPDIR""_in"
+#INPUT_LOCALDIR=$INDIR/"$TMPDIR""_in"
 
 # Create temporary local directories
-if [ ! -e \$INPUT_TMPDIR ];
-then
-	mkdir -p \$INPUT_TMPDIR
-fi
+#if [ ! -e \$INPUT_TMPDIR ];
+#then
+#	mkdir -p \$INPUT_TMPDIR
+#fi
 
 # copy to local temporary directory
 #cp \$FQ1 \$INPUT_TMPDIR/
@@ -275,7 +275,7 @@ EOF
 
 if [[ $PHREDSCORE == 33 ]];
 	then 
-		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR\\$FQ1 \$INDIR\\$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
+		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \$OUTDIR/\\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$OUTDIR/\\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR/\\$FQ1 \$INDIR/\\$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
 fi
 
 # if [[ $PHREDSCORE == 64 ]];
