@@ -218,7 +218,6 @@ echo ""
 
 
 echo '# Run in local directory' >> $SMSJOB
-echo 'cd $PBS_O_WORKDIR' >> $SMSJOB
 echo ''
 echo ''
 
