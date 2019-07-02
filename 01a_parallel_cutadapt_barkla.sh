@@ -275,6 +275,7 @@ EOF
 
 if [[ $PHREDSCORE == 33 ]];
 	then 
+		echo "-a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \$OUTDIR/\\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$OUTDIR/\\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR/\\$FQ1 \$INDIR/\\$FQ2 >> \$LOG 2>&1";
 		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \$OUTDIR/\\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$OUTDIR/\\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR/\\$FQ1 \$INDIR/\\$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
 fi
 
