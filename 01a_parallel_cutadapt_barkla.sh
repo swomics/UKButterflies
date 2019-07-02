@@ -221,15 +221,25 @@ echo '# Run in local directory' >> $SMSJOB
 echo ''
 echo ''
 
+FQtmp1=($INDIR/*R1*.fastq*)
+echo ${FQtmp1[*]}
+echo ''
+echo ''
+
+IND_tmp=$((SLURM_ARRAY_TASK_ID-1))
+echo $IND_tmp
+echo ''
+echo ''
+
 cat >> $SMSJOB <<EOF
 
 INDIR=$INDIR
 OUTDIR=$OUTDIR
 FQFILES1=(\$INDIR/*R1*.fastq*)
 FQFILES2=(\$INDIR/*R2*.fastq*)
-INDEX=\$(($SLURM_ARRAY_TASK_ID-1))
+INDEX=\$((SLURM_ARRAY_TASK_ID-1))
 
-echo "\$FQFILES1"
+
 
 FQ1=\${FQFILES1[\$INDEX]}
 FQ2=\${FQFILES2[\$INDEX]}
@@ -278,8 +288,7 @@ EOF
 
 if [[ $PHREDSCORE == 33 ]];
 	then 
-		echo "-a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \$OUTDIR/\\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$OUTDIR/\\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR/\\$FQ1 \$INDIR/\\$FQ2 >> \$LOG 2>&1";
-		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \$OUTDIR/\\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$OUTDIR/\\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR/\\$FQ1 \$INDIR/\\$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
+    echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o ${OUTDIR}\/\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p ${OUTDIR}\/\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz ${INDIR}\/\${FQ1} ${INDIR}\/\${FQ2} >> \$LOG 2>&1" >> $SMSJOB;
 fi
 
 # if [[ $PHREDSCORE == 64 ]];
@@ -322,3 +331,4 @@ echo "Command to submit the job to barkla:"
 echo
 echo "sbatch $SMSJOB"
 echo
+
