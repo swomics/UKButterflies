@@ -231,7 +231,7 @@ INDEX=\$(($SLURM_ARRAY_TASK_ID-1))
 FQ1=\${FQFILES1[\$INDEX]}
 FQ2=\${FQFILES2[\$INDEX]}
 
-INPUT_TMPDIR=$INPUT_LOCALDIR
+INPUT_LOCALDIR=$INDIR/"$TMPDIR""_in"
 
 # Create temporary local directories
 if [ ! -e \$INPUT_TMPDIR ];
