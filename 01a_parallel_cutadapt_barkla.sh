@@ -275,12 +275,12 @@ EOF
 
 if [[ $PHREDSCORE == 33 ]];
 	then 
-		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$FQ1 \$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
+		echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL -o \${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz \$INDIR\$FQ1 \$INDIR\$FQ2 >> \$LOG 2>&1" >> $SMSJOB;
 fi
 
  if [[ $PHREDSCORE == 64 ]];
      then 
-         echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL --quality-base=64 -o \${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz" >> $SMSJOB;
+         echo "$CMD -a $FWADAPT1 -A $RVADAPT1 -m $MINLEN -q $PHREDQUAL --quality-base=64 -o \$INDIR\${FQ1%%R1.fastq*}cutadapt_filtered_R1.fastq.gz -p \$INDIR\${FQ2%%R2.fastq*}cutadapt_filtered_R2.fastq.gz" >> $SMSJOB;
 fi
 
 cat >> $SMSJOB <<EOF
