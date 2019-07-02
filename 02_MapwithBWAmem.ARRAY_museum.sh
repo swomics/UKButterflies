@@ -1,24 +1,16 @@
 #!/bin/bash
-#PBS -N A1LM.BWA_mus1  ##job name
-#PBS -l nodes=1:ppn=1  #nr of nodes and processors per node
-#PBS -l mem=16gb #RAM
-#PBS -l walltime=10:00:00 ##wall time.  
-#PBS -j oe  #concatenates error and output files (with prefix job1)
-#PBS -t 1-52
-
-#run job in working directory
-cd $PBS_O_WORKDIR 
-#cd A1_Lymantria_monacha
-#pwd
-
-#Load modules
-module load apps/bwa-0.7.15
-module load apps/samtools-1.8
+#SBATCH -D ./
+#SBATCH --export=ALL
+#SBATCH -t 72:00:00
+#SBATCH --mem=16G
+#SBATCH -N 1 -n 1
+#SBATCH -a 1-$(find ./01a_museum_cutadapt_reads/ -maxdepth 1 -name "*R1*.fastq*" | wc -l | cut -f1 -d" ")
+#SBATCH -o bwa_out.log
 
 #Define variables
 
-RefSeq=Lymantria_monacha_v1.0.fasta
-total_files=`find 01a_museum_cutadapt_reads/ -name '*.fastq.gz' | wc -l`
+RefSeq=Polyommatus_bellargus_Red_MESPA.fasta
+total_files=`find ./01a_museum_cutadapt_reads/ -name '*.fastq.gz' | wc -l`
 #It is more efficient to run this hashed code in local directory before submitting to queue
 #ls 01a_museum_cutadapt_reads/*R1*fastq.gz >> R1.museum.names
 #sed -i s:01a_museum_cutadapt_reads/::g R1.museum.names
@@ -27,8 +19,8 @@ total_files=`find 01a_museum_cutadapt_reads/ -name '*.fastq.gz' | wc -l`
 #mkdir 02a_museum_mapped
 
 
-NAME1=$(sed "${PBS_ARRAYID}q;d" R1.museum.names)
-NAME2=$(sed "${PBS_ARRAYID}q;d" R2.museum.names)
+NAME1=$(sed "${SLURM_ARRAY_TASK_ID}q;d" R1.museum.names)
+NAME2=$(sed "${SLURM_ARRAY_TASK_ID}q;d" R2.museum.names)
 
 echo "mapping started" >> map.log
 echo "---------------" >> map.log
